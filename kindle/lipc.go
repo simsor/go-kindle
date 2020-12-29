@@ -34,6 +34,10 @@ func RawLIPCHashArray(service, property string) (hash []map[string]string, err e
 
 	var currentHash = make(map[string]string)
 	for i := 1; i < len(lines); i++ {
+		if strings.TrimSpace(lines[i]) == "" {
+			continue
+		}
+
 		if strings.HasPrefix(lines[i], "Hash Index:") {
 			// New entry
 			hash = append(hash, currentHash)
