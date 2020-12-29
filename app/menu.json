@@ -1,0 +1,16 @@
+{
+    "items": [
+        {
+           "name": "Run GoSample", 
+           "action": "./run.sh",
+           "exitmenu": false,
+           "refresh": false
+        },
+        {
+            "name": "Run GoSample (test)",
+            "action": "./gosample",
+            "exitmenu": false,
+            "refresh": false
+        }
+    ]
+  }
