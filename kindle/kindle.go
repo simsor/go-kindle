@@ -2,10 +2,23 @@ package kindle
 
 import (
 	"fmt"
+	"image"
 	"os/exec"
 	"strconv"
 	"strings"
+
+	"github.com/simsor/go-kindle/framebuffer"
 )
+
+var fb *framebuffer.Device
+
+func init() {
+	var err error
+	fb, err = framebuffer.Open("/dev/fb0")
+	if err != nil {
+		panic(err)
+	}
+}
 
 // RawEIPS sends a raw eips command to the Kindle. You should not be using this unless you know what you're doing.
 func RawEIPS(args ...string) string {
@@ -21,7 +34,7 @@ func RawEIPS(args ...string) string {
 
 // ClearScreen clears the Kindle screen
 func ClearScreen() {
-	RawEIPS("-c")
+	fb.Clear()
 }
 
 // DrawText writes the given text to the screen
@@ -62,4 +75,15 @@ func WaitForKey() (ke KeyEvent) {
 	ke.KeyCode = KeyCode(keyCode)
 	ke.State = state
 	return
+}
+
+// DrawImage write the given Image to the screen at position 0, 0
+func DrawImage(img image.Image) {
+	b := img.Bounds()
+	for x := b.Min.X; x < b.Max.X; x++ {
+		for y := b.Min.Y; y < b.Max.Y; y++ {
+			fb.Set(x, y, img.At(x, y))
+		}
+	}
+	fb.DirtyRefresh()
 }
