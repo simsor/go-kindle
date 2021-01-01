@@ -77,13 +77,18 @@ func WaitForKey() (ke KeyEvent) {
 	return
 }
 
-// DrawImage write the given Image to the screen at position 0, 0
-func DrawImage(img image.Image) {
+// DrawImageAt writes the given Image to the screen at the given position
+func DrawImageAt(img image.Image, posx, posy int) {
 	b := img.Bounds()
 	for x := b.Min.X; x < b.Max.X; x++ {
 		for y := b.Min.Y; y < b.Max.Y; y++ {
-			fb.Set(x, y, img.At(x, y))
+			fb.Set(x+posx, y+posy, img.At(x, y))
 		}
 	}
 	fb.DirtyRefresh()
+}
+
+// DrawImage writes the given Image to the screen at position 0, 0
+func DrawImage(img image.Image) {
+	DrawImageAt(img, 0, 0)
 }
