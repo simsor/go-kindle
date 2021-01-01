@@ -92,6 +92,11 @@ func (d *Device) Close() (err error) {
 	return
 }
 
+// Buffer returns the underlying byte slice mmap'd to the framebuffer.
+func (d *Device) Buffer() []byte {
+	return d.data
+}
+
 func (d *Device) ioctl(code uint, value int) error {
 	return unix.IoctlSetInt(int(d.fd.Fd()), code, value)
 }
