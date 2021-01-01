@@ -20,6 +20,11 @@ func init() {
 	}
 }
 
+// Framebuffer returns the underlying framebuffer.Device used to draw to the screen
+func Framebuffer() *framebuffer.Device {
+	return fb
+}
+
 // RawEIPS sends a raw eips command to the Kindle. You should not be using this unless you know what you're doing.
 func RawEIPS(args ...string) string {
 	cmd := exec.Command("/usr/sbin/eips", args...)
