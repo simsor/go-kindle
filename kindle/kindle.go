@@ -1,13 +1,12 @@
 package kindle
 
 import (
-	"fmt"
 	"image"
 	"os/exec"
 	"strconv"
-	"strings"
 
 	"github.com/simsor/go-kindle/framebuffer"
+	"github.com/simsor/go-kindle/keys"
 )
 
 var fb *framebuffer.Device
@@ -48,38 +47,8 @@ func DrawText(x, y int, str string) {
 }
 
 // WaitForKey waits for a physical button to be pressed and returns it
-func WaitForKey() (ke KeyEvent) {
-	ke = KeyEvent{
-		KeyCode: InvalidKey,
-		State:   0,
-	}
-
-	cmd := exec.Command("/usr/bin/waitforkey")
-
-	res, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-
-	str := string(res)
-	str = strings.TrimRight(str, "\n")
-	parts := strings.Split(str, " ")
-
-	keyCode, err := strconv.Atoi(parts[0])
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	state, err := strconv.Atoi(parts[1])
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-
-	ke.KeyCode = KeyCode(keyCode)
-	ke.State = state
-	return
+func WaitForKey() keys.KeyEvent {
+	return keys.WaitForKey()
 }
 
 // DrawImageAt writes the given Image to the screen at the given position
@@ -90,7 +59,7 @@ func DrawImageAt(img image.Image, posx, posy int) {
 			fb.Set(x+posx, y+posy, img.At(x, y))
 		}
 	}
-	fb.DirtyRefresh()
+	fb.FullRefresh()
 }
 
 // DrawImage writes the given Image to the screen at position 0, 0
